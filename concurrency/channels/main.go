@@ -21,11 +21,12 @@ func printer(c <-chan string) {
 	for {
 		msg := <-c
 		fmt.Println(msg)
-		time.Sleep(time.Millisecond * 1000)
+		// time.Sleep(time.Millisecond * 1000)
 	}
 }
+
 func main() {
-	var c chan string = make(chan string)
+	// var c chan string = make(chan string)
 
 	c1 := make(chan string)
 	c2 := make(chan string)
@@ -44,13 +45,22 @@ func main() {
 		}
 	}()
 
+	go func() {
+		for {
+			select {
+			case msg1 := <-c1:
+				fmt.Println(msg1)
+			case msg2 := <-c2:
+				fmt.Println(msg2)
+			case <-time.After(time.Second):
+				fmt.Println("timeout")
+			}
+		}
+	}()
 
-	go func ()  {
-		
-	}
-	go pinger(c)
-	go ponger(c)
-	go printer(c)
+	// go pinger(c)
+	// go ponger(c)
+	// go printer(c)
 
 	var input string
 	fmt.Scanln(&input)
